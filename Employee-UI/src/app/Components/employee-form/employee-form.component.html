@@ -1,0 +1,65 @@
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="card shadow p-4" style="width: 400px;">
+    <h4 class="text-center mb-4">{{ isEditMode ? 'Edit Employee' : 'Add Employee' }}</h4>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+
+  <div class="mb-3">
+    <label class="form-label">First Name</label>
+    <input type="text" formControlName="firstName" class="form-control"
+      [ngClass]="{'is-invalid': employeeForm.get('firstName')?.touched && employeeForm.get('firstName')?.invalid}" />
+    <div *ngIf="employeeForm.get('firstName')?.errors && employeeForm.get('firstName')?.touched" class="text-danger small">
+      <div *ngIf="employeeForm.get('firstName')?.errors?.['required']">First name is required.</div>
+      <div *ngIf="employeeForm.get('firstName')?.errors?.['maxlength']">Max 50 characters allowed.</div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Last Name</label>
+    <input type="text" formControlName="lastName" class="form-control"
+      [ngClass]="{'is-invalid': employeeForm.get('lastName')?.touched && employeeForm.get('lastName')?.invalid}" />
+    <div *ngIf="employeeForm.get('lastName')?.errors && employeeForm.get('lastName')?.touched" class="text-danger small">
+      <div *ngIf="employeeForm.get('lastName')?.errors?.['required']">Last name is required.</div>
+      <div *ngIf="employeeForm.get('lastName')?.errors?.['maxlength']">Max 50 characters allowed.</div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" formControlName="email" class="form-control"
+      [ngClass]="{'is-invalid': employeeForm.get('email')?.touched && employeeForm.get('email')?.invalid}" />
+    <div *ngIf="employeeForm.get('email')?.errors && employeeForm.get('email')?.touched" class="text-danger small">
+      <div *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required.</div>
+      <div *ngIf="employeeForm.get('email')?.errors?.['email']">Invalid email format.</div>
+      <div *ngIf="employeeForm.get('email')?.errors?.['maxlength']">Max 100 characters allowed.</div>
+    </div>
+<div *ngIf="emailExists === true" class="text-danger small mt-1">
+  This email is already registered.
+</div>
+
+<div *ngIf="emailExists === false" class="text-success small mt-1">
+  Email is available.
+</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Date of Birth</label>
+    <input type="date" formControlName="dateOfBirth" class="form-control"
+      [ngClass]="{'is-invalid': employeeForm.get('dateOfBirth')?.touched && employeeForm.get('dateOfBirth')?.invalid}" />
+    <div *ngIf="employeeForm.get('dateOfBirth')?.errors && employeeForm.get('dateOfBirth')?.touched" class="text-danger small">
+      <div *ngIf="employeeForm.get('dateOfBirth')?.errors?.['required']">Date of birth is required.</div>
+    </div>
+  </div>
+
+  <div class="form-check mb-3">
+    <input type="checkbox" formControlName="isActive" class="form-check-input form-control" id="isActive" />
+    <label class="form-check-label" for="isActive">Active</label>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100" [disabled]="employeeForm.invalid || emailExists">
+    {{ isEditMode ? 'Update Employee' : 'Save Employee' }}
+  </button>
+</form>
+
+  </div>
+</div>
