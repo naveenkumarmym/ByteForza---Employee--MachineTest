@@ -100,7 +100,7 @@ namespace EmployeeAPI.Controllers
             }
 
             bool emailExists = _employeeServices.GetAllEmployees()
-                .Any(x => x.Email == employee.Email && x.IsActive && x.EmployeeId != employee.EmployeeId);
+                .Any(x => x.Email == employee.Email && x.EmployeeId != employee.EmployeeId);
             if (emailExists)
             {
                 _logger.LogWarning("Duplicate email detected during update: {email}", employee.Email);
@@ -119,7 +119,7 @@ namespace EmployeeAPI.Controllers
         }
 
         [HttpGet("CheckEmailExists")]
-        public IActionResult CheckEmailExists([FromQuery] string email)
+        public IActionResult CheckEmailExists([FromQuery] string email,int id=0)
         {
             _logger.LogInformation("Checking if email exists: {email}", email);
 
@@ -128,19 +128,20 @@ namespace EmployeeAPI.Controllers
                 _logger.LogWarning("Email check failed: email parameter was empty.");
                 return BadRequest(new ApiResponse<string>(400, "Email is required."));
             }
-
-            bool exists = _employeeServices.GetAllEmployees()
-                .Any(x => x.Email.ToLower() == email.ToLower() && x.IsActive);
-
+            bool exists;
+            if (id > 0)
+            {
+                exists = _employeeServices.GetAllEmployees()
+                    .Any(x => x.Email.ToLower() == email.ToLower() && x.EmployeeId != id);
+            }
+            else
+            {
+                 exists = _employeeServices.GetAllEmployees()
+                .Any(x => x.Email.ToLower() == email.ToLower());
+            }
             _logger.LogInformation("Email check result for {email}: {exists}", email, exists);
             return Ok(new ApiResponse<bool>(200,
                 exists ? "Email already exists." : "Email is available.", exists));
         }
-        [HttpGet("TestError")]
-        public IActionResult TestError()
-        {
-            throw new Exception("Simulated test exception for middleware check");
-        }
-
     }
 }
